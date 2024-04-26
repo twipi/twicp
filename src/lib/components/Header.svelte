@@ -41,7 +41,7 @@
         width: 1.5em;
         height: auto;
         margin-right: 0.25em;
-        border-radius: 0.25em;
+        border-radius: 0.35em;
       }
 
       b {
