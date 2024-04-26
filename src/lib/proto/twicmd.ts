@@ -98,6 +98,13 @@ export interface Service {
   description: string
   /** The list of descriptions of commands that the service provides. */
   commands: CommandDescription[]
+  /**
+   * The human-readable name of the service.
+   * This name can be the full and properly captalized name of the service.
+   */
+  humanName?: string | undefined
+  /** The URL to the service's official website, if any. */
+  websiteUrl?: string | undefined
   /** The URL of the service's icon. */
   iconUrl?: string | undefined
   /** The optional brand color of the service. */
@@ -214,6 +221,8 @@ function createBaseService(): Service {
     name: "",
     description: "",
     commands: [],
+    humanName: undefined,
+    websiteUrl: undefined,
     iconUrl: undefined,
     color: undefined,
     optionsSchema: undefined,
@@ -230,6 +239,12 @@ export const Service = {
     }
     for (const v of message.commands) {
       CommandDescription.encode(v!, writer.uint32(18).fork()).ldelim()
+    }
+    if (message.humanName !== undefined) {
+      writer.uint32(58).string(message.humanName)
+    }
+    if (message.websiteUrl !== undefined) {
+      writer.uint32(66).string(message.websiteUrl)
     }
     if (message.iconUrl !== undefined) {
       writer.uint32(34).string(message.iconUrl)
@@ -271,6 +286,20 @@ export const Service = {
 
           message.commands.push(CommandDescription.decode(reader, reader.uint32()))
           continue
+        case 7:
+          if (tag !== 58) {
+            break
+          }
+
+          message.humanName = reader.string()
+          continue
+        case 8:
+          if (tag !== 66) {
+            break
+          }
+
+          message.websiteUrl = reader.string()
+          continue
         case 4:
           if (tag !== 34) {
             break
@@ -308,6 +337,8 @@ export const Service = {
       commands: globalThis.Array.isArray(object?.commands)
         ? object.commands.map((e: any) => CommandDescription.fromJSON(e))
         : [],
+      humanName: isSet(object.humanName) ? globalThis.String(object.humanName) : undefined,
+      websiteUrl: isSet(object.websiteUrl) ? globalThis.String(object.websiteUrl) : undefined,
       iconUrl: isSet(object.iconUrl) ? globalThis.String(object.iconUrl) : undefined,
       color: isSet(object.color) ? globalThis.String(object.color) : undefined,
       optionsSchema: isSet(object.optionsSchema)
@@ -326,6 +357,12 @@ export const Service = {
     }
     if (message.commands?.length) {
       obj.commands = message.commands.map((e) => CommandDescription.toJSON(e))
+    }
+    if (message.humanName !== undefined) {
+      obj.humanName = message.humanName
+    }
+    if (message.websiteUrl !== undefined) {
+      obj.websiteUrl = message.websiteUrl
     }
     if (message.iconUrl !== undefined) {
       obj.iconUrl = message.iconUrl
@@ -347,6 +384,8 @@ export const Service = {
     message.name = object.name ?? ""
     message.description = object.description ?? ""
     message.commands = object.commands?.map((e) => CommandDescription.fromPartial(e)) || []
+    message.humanName = object.humanName ?? undefined
+    message.websiteUrl = object.websiteUrl ?? undefined
     message.iconUrl = object.iconUrl ?? undefined
     message.color = object.color ?? undefined
     message.optionsSchema =

@@ -1,6 +1,6 @@
 import * as twid from "#/lib/proto/twid"
 
-export const baseURL = "/api"
+export const baseURL = import.meta.env.VITE_TWIPI_URL + "/api"
 
 type protoMessage<T> =
   T extends Record<string, any>
@@ -36,7 +36,7 @@ export const loginPhase1: Route<
   typeof undefined
 > = {
   method: "POST",
-  path: "/login/phase1",
+  path: "/services/login/phase1",
   requestType: twid.LoginPhase1Request,
   responseType: undefined,
 }
@@ -48,7 +48,7 @@ export const loginPhase2: Route<
   typeof twid.LoginResponse
 > = {
   method: "POST",
-  path: "/login/phase2",
+  path: "/services/login/phase2",
   requestType: twid.LoginPhase2Request,
   responseType: twid.LoginResponse,
 }
@@ -60,7 +60,7 @@ export const listServices: Route<
   typeof twid.ListServicesResponse
 > = {
   method: "GET",
-  path: "/",
+  path: "/services/",
   requestType: twid.ListServicesRequest,
   responseType: twid.ListServicesResponse,
 }
@@ -72,7 +72,7 @@ export const getService: Route<
   typeof twid.GetServiceResponse
 > = {
   method: "GET",
-  path: "/:name",
+  path: "/services/:name",
   requestType: twid.GetServiceRequest,
   responseType: twid.GetServiceResponse,
 }
@@ -84,7 +84,7 @@ export const getControlPanel: Route<
   typeof twid.GetControlPanelResponse
 > = {
   method: "GET",
-  path: "/:name/cp",
+  path: "/services/:name/cp",
   requestType: twid.GetControlPanelRequest,
   responseType: twid.GetControlPanelResponse,
 }

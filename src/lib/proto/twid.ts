@@ -29,21 +29,19 @@ export interface ListServicesResponse {
 export interface ServiceListItem {
   name: string
   description: string
+  humanName?: string | undefined
+  websiteUrl?: string | undefined
   iconUrl?: string | undefined
   color?: string | undefined
 }
 
-export interface GetServiceRequest {
-  service: string
-}
+export interface GetServiceRequest {}
 
 export interface GetServiceResponse {
   service: Service | undefined
 }
 
-export interface GetControlPanelRequest {
-  service: string
-}
+export interface GetControlPanelRequest {}
 
 export interface GetControlPanelResponse {
   service: Service | undefined
@@ -362,7 +360,14 @@ export const ListServicesResponse = {
 }
 
 function createBaseServiceListItem(): ServiceListItem {
-  return { name: "", description: "", iconUrl: undefined, color: undefined }
+  return {
+    name: "",
+    description: "",
+    humanName: undefined,
+    websiteUrl: undefined,
+    iconUrl: undefined,
+    color: undefined,
+  }
 }
 
 export const ServiceListItem = {
@@ -371,13 +376,19 @@ export const ServiceListItem = {
       writer.uint32(10).string(message.name)
     }
     if (message.description !== "") {
-      writer.uint32(18).string(message.description)
+      writer.uint32(26).string(message.description)
+    }
+    if (message.humanName !== undefined) {
+      writer.uint32(58).string(message.humanName)
+    }
+    if (message.websiteUrl !== undefined) {
+      writer.uint32(66).string(message.websiteUrl)
     }
     if (message.iconUrl !== undefined) {
-      writer.uint32(26).string(message.iconUrl)
+      writer.uint32(34).string(message.iconUrl)
     }
     if (message.color !== undefined) {
-      writer.uint32(34).string(message.color)
+      writer.uint32(42).string(message.color)
     }
     return writer
   },
@@ -396,22 +407,36 @@ export const ServiceListItem = {
 
           message.name = reader.string()
           continue
-        case 2:
-          if (tag !== 18) {
-            break
-          }
-
-          message.description = reader.string()
-          continue
         case 3:
           if (tag !== 26) {
             break
           }
 
-          message.iconUrl = reader.string()
+          message.description = reader.string()
+          continue
+        case 7:
+          if (tag !== 58) {
+            break
+          }
+
+          message.humanName = reader.string()
+          continue
+        case 8:
+          if (tag !== 66) {
+            break
+          }
+
+          message.websiteUrl = reader.string()
           continue
         case 4:
           if (tag !== 34) {
+            break
+          }
+
+          message.iconUrl = reader.string()
+          continue
+        case 5:
+          if (tag !== 42) {
             break
           }
 
@@ -430,6 +455,8 @@ export const ServiceListItem = {
     return {
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       description: isSet(object.description) ? globalThis.String(object.description) : "",
+      humanName: isSet(object.humanName) ? globalThis.String(object.humanName) : undefined,
+      websiteUrl: isSet(object.websiteUrl) ? globalThis.String(object.websiteUrl) : undefined,
       iconUrl: isSet(object.iconUrl) ? globalThis.String(object.iconUrl) : undefined,
       color: isSet(object.color) ? globalThis.String(object.color) : undefined,
     }
@@ -442,6 +469,12 @@ export const ServiceListItem = {
     }
     if (message.description !== "") {
       obj.description = message.description
+    }
+    if (message.humanName !== undefined) {
+      obj.humanName = message.humanName
+    }
+    if (message.websiteUrl !== undefined) {
+      obj.websiteUrl = message.websiteUrl
     }
     if (message.iconUrl !== undefined) {
       obj.iconUrl = message.iconUrl
@@ -459,6 +492,8 @@ export const ServiceListItem = {
     const message = createBaseServiceListItem()
     message.name = object.name ?? ""
     message.description = object.description ?? ""
+    message.humanName = object.humanName ?? undefined
+    message.websiteUrl = object.websiteUrl ?? undefined
     message.iconUrl = object.iconUrl ?? undefined
     message.color = object.color ?? undefined
     return message
@@ -466,14 +501,11 @@ export const ServiceListItem = {
 }
 
 function createBaseGetServiceRequest(): GetServiceRequest {
-  return { service: "" }
+  return {}
 }
 
 export const GetServiceRequest = {
-  encode(message: GetServiceRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.service !== "") {
-      writer.uint32(10).string(message.service)
-    }
+  encode(_: GetServiceRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer
   },
 
@@ -484,13 +516,6 @@ export const GetServiceRequest = {
     while (reader.pos < end) {
       const tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break
-          }
-
-          message.service = reader.string()
-          continue
       }
       if ((tag & 7) === 4 || tag === 0) {
         break
@@ -500,24 +525,20 @@ export const GetServiceRequest = {
     return message
   },
 
-  fromJSON(object: any): GetServiceRequest {
-    return { service: isSet(object.service) ? globalThis.String(object.service) : "" }
+  fromJSON(_: any): GetServiceRequest {
+    return {}
   },
 
-  toJSON(message: GetServiceRequest): unknown {
+  toJSON(_: GetServiceRequest): unknown {
     const obj: any = {}
-    if (message.service !== "") {
-      obj.service = message.service
-    }
     return obj
   },
 
   create<I extends Exact<DeepPartial<GetServiceRequest>, I>>(base?: I): GetServiceRequest {
     return GetServiceRequest.fromPartial(base ?? ({} as any))
   },
-  fromPartial<I extends Exact<DeepPartial<GetServiceRequest>, I>>(object: I): GetServiceRequest {
+  fromPartial<I extends Exact<DeepPartial<GetServiceRequest>, I>>(_: I): GetServiceRequest {
     const message = createBaseGetServiceRequest()
-    message.service = object.service ?? ""
     return message
   },
 }
@@ -583,14 +604,11 @@ export const GetServiceResponse = {
 }
 
 function createBaseGetControlPanelRequest(): GetControlPanelRequest {
-  return { service: "" }
+  return {}
 }
 
 export const GetControlPanelRequest = {
-  encode(message: GetControlPanelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.service !== "") {
-      writer.uint32(10).string(message.service)
-    }
+  encode(_: GetControlPanelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer
   },
 
@@ -601,13 +619,6 @@ export const GetControlPanelRequest = {
     while (reader.pos < end) {
       const tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break
-          }
-
-          message.service = reader.string()
-          continue
       }
       if ((tag & 7) === 4 || tag === 0) {
         break
@@ -617,15 +628,12 @@ export const GetControlPanelRequest = {
     return message
   },
 
-  fromJSON(object: any): GetControlPanelRequest {
-    return { service: isSet(object.service) ? globalThis.String(object.service) : "" }
+  fromJSON(_: any): GetControlPanelRequest {
+    return {}
   },
 
-  toJSON(message: GetControlPanelRequest): unknown {
+  toJSON(_: GetControlPanelRequest): unknown {
     const obj: any = {}
-    if (message.service !== "") {
-      obj.service = message.service
-    }
     return obj
   },
 
@@ -635,10 +643,9 @@ export const GetControlPanelRequest = {
     return GetControlPanelRequest.fromPartial(base ?? ({} as any))
   },
   fromPartial<I extends Exact<DeepPartial<GetControlPanelRequest>, I>>(
-    object: I,
+    _: I,
   ): GetControlPanelRequest {
     const message = createBaseGetControlPanelRequest()
-    message.service = object.service ?? ""
     return message
   },
 }

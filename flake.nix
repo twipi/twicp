@@ -37,6 +37,7 @@
 					export PATH="$(git rev-parse --show-toplevel)/node_modules/.bin:$PATH"
 
 					# Generate the proto files.
+					mkdir -p "$TASK_TEMP_DIR"
 					task generate
 				'';
 			};

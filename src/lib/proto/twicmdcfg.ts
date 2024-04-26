@@ -59,7 +59,7 @@ export interface StringListType {
    * list. Each submatch in the regex is a column in the table.
    */
   structuringRegex?: string | undefined
-  structurings: string[]
+  structuringColumns: string[]
 }
 
 export interface NumberType {
@@ -539,7 +539,7 @@ export const StringType = {
 }
 
 function createBaseStringListType(): StringListType {
-  return { structuringRegex: undefined, structurings: [] }
+  return { structuringRegex: undefined, structuringColumns: [] }
 }
 
 export const StringListType = {
@@ -547,7 +547,7 @@ export const StringListType = {
     if (message.structuringRegex !== undefined) {
       writer.uint32(10).string(message.structuringRegex)
     }
-    for (const v of message.structurings) {
+    for (const v of message.structuringColumns) {
       writer.uint32(18).string(v!)
     }
     return writer
@@ -572,7 +572,7 @@ export const StringListType = {
             break
           }
 
-          message.structurings.push(reader.string())
+          message.structuringColumns.push(reader.string())
           continue
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -588,8 +588,8 @@ export const StringListType = {
       structuringRegex: isSet(object.structuringRegex)
         ? globalThis.String(object.structuringRegex)
         : undefined,
-      structurings: globalThis.Array.isArray(object?.structurings)
-        ? object.structurings.map((e: any) => globalThis.String(e))
+      structuringColumns: globalThis.Array.isArray(object?.structuringColumns)
+        ? object.structuringColumns.map((e: any) => globalThis.String(e))
         : [],
     }
   },
@@ -599,8 +599,8 @@ export const StringListType = {
     if (message.structuringRegex !== undefined) {
       obj.structuringRegex = message.structuringRegex
     }
-    if (message.structurings?.length) {
-      obj.structurings = message.structurings
+    if (message.structuringColumns?.length) {
+      obj.structuringColumns = message.structuringColumns
     }
     return obj
   },
@@ -611,7 +611,7 @@ export const StringListType = {
   fromPartial<I extends Exact<DeepPartial<StringListType>, I>>(object: I): StringListType {
     const message = createBaseStringListType()
     message.structuringRegex = object.structuringRegex ?? undefined
-    message.structurings = object.structurings?.map((e) => e) || []
+    message.structuringColumns = object.structuringColumns?.map((e) => e) || []
     return message
   },
 }

@@ -5,6 +5,13 @@ import * as path from "path"
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [svelte()],
+  css: {
+    preprocessorOptions: {
+      sass: {
+        additionalData: `@import "#/styles/mixins";` + "\n",
+      },
+    },
+  },
   // https://github.com/vitejs/vite/issues/7385#issuecomment-1286606298
   resolve: {
     alias: {

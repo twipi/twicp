@@ -4,7 +4,13 @@ export * from "./routes"
 import { localWritable as persisted } from "@macfja/svelte-persistent-store"
 import { get } from "svelte/store"
 
-export const token = persisted<string | undefined>("token")
+export const session = persisted<
+  | undefined
+  | {
+      token: string
+      phoneNumber: string
+    }
+>("token")
 
 export class PathError extends Error {
   constructor(
@@ -15,49 +21,51 @@ export class PathError extends Error {
   }
 }
 
-function assertPathParams(route: routes.Route, path: string) {
+function buildPathParams(route: routes.Route, params: Record<string, string>): string {
   const parts1 = route.path.split("/")
-  const parts2 = path.split("/")
-  if (parts1.length !== parts2.length) {
-    throw new PathError(route, path)
-  }
   for (let i = 0; i < parts1.length; i++) {
     if (parts1[i].startsWith(":")) {
-      if (parts1[i] === parts2[i]) {
-        throw new PathError(route, path)
+      const key = parts1[i].slice(1)
+      if (!params[key]) {
+        throw new Error(`missing URL parameter ${key}`)
       }
-    } else {
-      if (parts1[i] !== parts2[i]) {
-        throw new PathError(route, path)
-      }
+      parts1[i] = params[key]
     }
   }
+  return parts1.join("/")
 }
 
 export async function call<T extends routes.Route>(
   route: T,
-  path: string = route.path,
-  body?: routes.RequestTypeOf<T>,
+  urlParams: Record<string, string>,
+  request: routes.RequestTypeOf<T>,
 ): Promise<routes.ResponseTypeOf<T>> {
-  assertPathParams(route, path)
-
-  if (body && !route.requestType) {
-    throw new Error("unexpected body")
-  }
-
   const headers = new Headers()
   if (route.requestType) {
     headers.set("Content-Type", "application/json")
   }
-  const t = get(token)
-  if (t) {
-    headers.set("Authorization", `Bearer ${t}`)
+
+  const s = get(session)
+  if (s) {
+    headers.set("Authorization", `Bearer ${s.token}`)
   }
 
-  const resp = await fetch(routes.baseURL + path, {
+  const url = new URL(routes.baseURL + buildPathParams(route, urlParams))
+  let body
+
+  if (request) {
+    const json = JSON.stringify(route.requestType.toJSON(request))
+    if (route.method === "GET") {
+      url.searchParams.set("params", json)
+    } else {
+      body = json
+    }
+  }
+
+  const resp = await fetch(url, {
     method: route.method,
     headers,
-    body: body && JSON.stringify(route.requestType.toJSON(body)),
+    body,
   })
 
   if (!resp.ok) {
