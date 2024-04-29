@@ -35,7 +35,7 @@
           <a
             role="button"
             href="/service/{service.name}"
-            class="outline shadow"
+            class="outline shadow fat-padding"
             style={isValidColor(service.color) ? `--color: ${service.color}` : undefined}
           >
             {#if service.iconUrl}

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Phone from "svelte-google-materialdesign-icons/Phone.svelte"
+
   import { session } from "#/lib/api"
   import { link } from "svelte-spa-router"
 
@@ -15,6 +17,7 @@
   </h1>
   <aside>
     {#if $session}
+      <Phone size="24" variation="filled" />
       {$session.phoneNumber}
     {:else}
       <a use:link href="/login">Login</a>
