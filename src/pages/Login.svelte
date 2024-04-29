@@ -3,7 +3,7 @@
   import GppBad from "svelte-google-materialdesign-icons/Gpp_bad.svelte"
 
   import { type AddedToast, addToast } from "#/lib/toasts"
-  import { slide } from "svelte/transition"
+  import { fade, slide } from "svelte/transition"
   import { call, session, loginPhase1, loginPhase2 } from "#/lib/api"
   import { canonicalizePhoneNumber } from "#/lib/canonical"
   import { push as goto } from "svelte-spa-router"
@@ -45,7 +45,11 @@
   }
 </script>
 
-<main class="container">
+<svelte:head>
+  <title>Login - Twipi</title>
+</svelte:head>
+
+<main class="container" transition:fade>
   <h1>Login</h1>
 
   <form on:submit|preventDefault={() => submitForm()}>

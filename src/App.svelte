@@ -7,6 +7,8 @@
   import Login from "#/pages/Login.svelte"
 
   import { toasts } from "#/lib/toasts"
+  import { location } from "svelte-spa-router"
+  import Header from "./lib/components/Header.svelte"
 </script>
 
 <div class="toast-overlay">
@@ -15,11 +17,15 @@
   {/each}
 </div>
 
+{#if !$location.startsWith("/login")}
+  <Header />
+{/if}
+
 <Router
   routes={{
     "/": BrowseServices,
     "/login": Login,
-    "/service/:service": ServiceDoc,
+    "/service/:name": ServiceDoc,
   }}
 />
 
