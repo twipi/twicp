@@ -2,7 +2,7 @@ version: "3"
 
 set: [pipefail, errexit, nounset]
 
-vars:
+env:
   TWIPI_URL: "http://localhost:8080"
   PORT: 8000
 
@@ -11,14 +11,14 @@ tasks:
     deps: [dev]
 
   dev:
-    deps: [generate]
+    deps: [node_modules, generate]
     env:
       VITE_TWIPI_URL: "{{ .TWIPI_URL }}"
     cmds:
       - vite --clearScreen=false --port="$PORT"
 
   build:
-    deps: [generate]
+    deps: [node_modules, generate]
     env:
       VITE_TWIPI_URL: https://twipi.libdb.so
     cmds:
@@ -33,6 +33,7 @@ tasks:
       vars: [PROTO_PATH]
     status:
       - grep -q "$PROTO_PATH" "$TASK_TEMP_DIR"/proto_path
+    deps: [node_modules]
     cmds:
       - for:
           var: PROTO_PATH
@@ -48,3 +49,12 @@ tasks:
       - echo "$PROTO_PATH" > "$TASK_TEMP_DIR"/proto_path
     generates:
       - src/lib/proto/*.ts
+
+  node_modules:
+    cmds:
+      - npm install
+    sources:
+      - package.json
+      - package-lock.json
+    generates:
+      - node_modules
