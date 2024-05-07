@@ -3,8 +3,8 @@ version: "3"
 set: [pipefail, errexit, nounset]
 
 vars:
-  TWIPI_URL: "http://localhost:8080"
-  PORT: 8000
+  TWIPI_URL: '{{ .TWIPI_URL | default "http://localhost:8080" }}'
+  PORT: '{{ .PORT | default "3000" }}'
 
 tasks:
   default:
@@ -15,6 +15,7 @@ tasks:
     env:
       VITE_TWIPI_URL: "{{ .TWIPI_URL }}"
     cmds:
+      - echo "Using $VITE_TWIPI_URL for the Twipi URL."
       - vite --clearScreen=false --port="$PORT"
 
   build:
