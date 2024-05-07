@@ -2,7 +2,10 @@ import * as routes from "./routes"
 export * from "./routes"
 
 import { localWritable as persisted } from "@macfja/svelte-persistent-store"
+import { writable } from "svelte/store"
 import { get } from "svelte/store"
+import { push as goto } from "svelte-spa-router"
+import { Service } from "../proto/twicmd"
 
 export const session = persisted<
   | undefined
@@ -12,12 +15,20 @@ export const session = persisted<
     }
 >("token")
 
+export const cachedService = writable<Service | undefined>(undefined)
+
 export class PathError extends Error {
   constructor(
     public route: routes.Route,
     public path: string,
   ) {
     super(`expected path "${route.path}", got "${path}"`)
+  }
+}
+
+export class UnauthorizedError extends Error {
+  constructor() {
+    super("unauthorized")
   }
 }
 
@@ -69,6 +80,9 @@ export async function call<T extends routes.Route>(
   })
 
   if (!resp.ok) {
+    if (resp.status == 401) {
+      throw new UnauthorizedError()
+    }
     throw new Error(`unexpected status code ${resp.status}`)
   }
 

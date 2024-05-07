@@ -54,11 +54,11 @@ export interface StringType {
 /** A string list option type. */
 export interface StringListType {
   /**
-   * The regex to use for structuring string values into a prettier table.
+   * The separator to use for structuring string values into a prettier table.
    * Each column in the table is named by the field in the structuring_fields
-   * list. Each submatch in the regex is a column in the table.
+   * list. Each separated value corresponds to a column in the table.
    */
-  structuringRegex?: string | undefined
+  structuringSeparator?: string | undefined
   structuringColumns: string[]
 }
 
@@ -539,13 +539,13 @@ export const StringType = {
 }
 
 function createBaseStringListType(): StringListType {
-  return { structuringRegex: undefined, structuringColumns: [] }
+  return { structuringSeparator: undefined, structuringColumns: [] }
 }
 
 export const StringListType = {
   encode(message: StringListType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.structuringRegex !== undefined) {
-      writer.uint32(10).string(message.structuringRegex)
+    if (message.structuringSeparator !== undefined) {
+      writer.uint32(10).string(message.structuringSeparator)
     }
     for (const v of message.structuringColumns) {
       writer.uint32(18).string(v!)
@@ -565,7 +565,7 @@ export const StringListType = {
             break
           }
 
-          message.structuringRegex = reader.string()
+          message.structuringSeparator = reader.string()
           continue
         case 2:
           if (tag !== 18) {
@@ -585,8 +585,8 @@ export const StringListType = {
 
   fromJSON(object: any): StringListType {
     return {
-      structuringRegex: isSet(object.structuringRegex)
-        ? globalThis.String(object.structuringRegex)
+      structuringSeparator: isSet(object.structuringSeparator)
+        ? globalThis.String(object.structuringSeparator)
         : undefined,
       structuringColumns: globalThis.Array.isArray(object?.structuringColumns)
         ? object.structuringColumns.map((e: any) => globalThis.String(e))
@@ -596,8 +596,8 @@ export const StringListType = {
 
   toJSON(message: StringListType): unknown {
     const obj: any = {}
-    if (message.structuringRegex !== undefined) {
-      obj.structuringRegex = message.structuringRegex
+    if (message.structuringSeparator !== undefined) {
+      obj.structuringSeparator = message.structuringSeparator
     }
     if (message.structuringColumns?.length) {
       obj.structuringColumns = message.structuringColumns
@@ -610,7 +610,7 @@ export const StringListType = {
   },
   fromPartial<I extends Exact<DeepPartial<StringListType>, I>>(object: I): StringListType {
     const message = createBaseStringListType()
-    message.structuringRegex = object.structuringRegex ?? undefined
+    message.structuringSeparator = object.structuringSeparator ?? undefined
     message.structuringColumns = object.structuringColumns?.map((e) => e) || []
     return message
   },

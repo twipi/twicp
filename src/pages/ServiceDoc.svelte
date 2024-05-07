@@ -1,13 +1,19 @@
 <script lang="ts">
-  import Launch from "svelte-google-materialdesign-icons/Launch.svelte"
+  import Settings from "svelte-google-materialdesign-icons/Settings.svelte"
   import Loading from "#/lib/components/Loading.svelte"
 
   import { fade } from "svelte/transition"
-  import { hostname } from "#/lib/canonical"
-  import { call, getService } from "#/lib/api"
+  import { link } from "svelte-spa-router"
+  import { call, getService, session, cachedService } from "#/lib/api"
+  import ServiceHeader from "#/lib/components/ServiceHeader.svelte"
 
   export let params: { name: string }
-  $: promise = call(getService, { name: params.name }, {}).then((p) => p.service!)
+  $: promise = call(getService, { name: params.name }, {})
+    .then((p) => p.service!)
+    .then((s) => {
+      $cachedService = s
+      return s
+    })
 
   let title = params.name
   $: (async () => {
@@ -26,28 +32,16 @@
   </div>
 {:then service}
   <main class="container" transition:fade>
-    <header class="shadow">
-      <img class="brand-icon inverted" src={service.iconUrl} alt={service.name + " icon"} />
-      <div>
-        <hgroup>
-          <h2>{service.humanName ?? service.name}</h2>
-
-          {#if service.websiteUrl}
-            <p class="website-url">
-              Website:
-              <a href={service.websiteUrl} class="website-url" target="_blank">
-                <span>{hostname(service.websiteUrl)}</span>
-                <Launch size="16" /></a
-              >
-            </p>
-          {/if}
-        </hgroup>
-
-        {#if service.description}
-          <p class="description">{service.description}</p>
+    <ServiceHeader {service}>
+      <div class="header-controls" slot="tail">
+        {#if service.optionsSchema && $session}
+          <a use:link href="/service/{service.name}/cp" role="button" title="Settings" class="flat">
+            <Settings />
+            <span>Settings</span>
+          </a>
         {/if}
       </div>
-    </header>
+    </ServiceHeader>
 
     <section id="commands">
       <h3>Documentation</h3>
@@ -91,49 +85,29 @@
 {/await}
 
 <style lang="scss">
-  header {
-    display: flex;
-    align-items: center;
+  .header-controls {
+    [role="button"].flat {
+      color: inherit;
+      border: none;
+      box-shadow: none;
+      background: none;
+      border-radius: 99px;
 
-    margin: var(--pico-spacing) 0;
-    padding: 1em 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-    color: var(--pico-secondary-inverse);
-    background-color: var(--pico-secondary-background);
-    border-radius: var(--pico-border-radius);
-
-    img.brand-icon {
-      width: 6em;
-      height: 6em;
-      margin: var(--pico-spacing) calc(var(--pico-spacing) * 2);
-      object-fit: contain;
-    }
-
-    hgroup {
-      margin-bottom: 1em;
-
-      h2 {
-        color: inherit;
-        margin: 0;
-        line-height: 1.25;
+      &:hover {
+        background: var(--pico-secondary);
       }
-    }
 
-    p {
-      margin-bottom: 0;
-      color: inherit;
-    }
+      span {
+        margin-left: 0.35em;
 
-    a {
-      color: inherit;
-    }
-
-    p.website-url {
-      font-size: 0.85em;
-    }
-
-    p.description {
-      font-size: 1.1em;
+        @media (max-width: 480px) {
+          display: none;
+        }
+      }
     }
   }
 

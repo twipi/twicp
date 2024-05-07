@@ -1,0 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=PT+Mono&display=swap");
+
+:root {
+  --pico-border-radius: 0.75rem;
+  --pico-border-width: 2px;
+  --pico-font-family: "Lexend", sans-serif;
+  --pico-font-family-monospace: "PT Mono", monospace;
+  --pico-spacing: 1em;
+  --pico-line-height: 1.5em;
+  --pico-typography-spacing-vertical: calc(1.5 * var(--pico-spacing));
+  --pico-form-element-spacing-vertical: calc(0.75 * var(--pico-spacing));
+  --pico-form-element-spacing-horizontal: calc(1 * var(--pico-spacing));
+}
+
+[data-theme="light"],
+:root:not([data-theme="dark"]) {
+  --pico-background-color: #f1f1f1;
+  --pico-primary-border: black;
+  --pico-shadow-color: rgba(0, 0, 0, 0.25);
+}

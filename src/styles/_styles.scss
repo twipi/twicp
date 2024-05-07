@@ -1,0 +1,96 @@
+.fat-padding {
+  --pico-form-element-spacing-vertical: calc(1 * var(--pico-spacing));
+  --pico-form-element-spacing-horizontal: calc(1.15 * var(--pico-spacing));
+}
+
+html,
+body {
+  height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: var(--pico-typography-spacing-vertical) 0;
+  font-weight: 500;
+}
+
+#app,
+.contents {
+  display: contents;
+}
+
+@mixin outline {
+  color: var(--pico-primary-border);
+  background-color: var(--pico-primary-inverse);
+  &:hover {
+    background-color: transparent;
+  }
+}
+
+.outline {
+  @include outline;
+}
+
+@mixin shadow {
+  --shadow-distance: 0.25em;
+  box-shadow: var(--shadow-distance) var(--shadow-distance) 0 0 var(--pico-shadow-color);
+}
+
+.shadow {
+  @include shadow;
+}
+
+button,
+[type="submit"],
+[type="button"],
+[role="button"] {
+  &:not(.no-shadow) {
+    @include shadow;
+    @include outline;
+
+    --depressed-distance: 1px;
+    transition: all 150ms linear;
+
+    &:active {
+      transform: translateX(var(--depressed-distance)) translateY(var(--depressed-distance));
+      transition-duration: 25ms;
+      box-shadow: calc(var(--shadow-distance) - var(--depressed-distance))
+        calc(var(--shadow-distance) - var(--depressed-distance)) 0 0 var(--pico-shadow-color);
+    }
+  }
+
+  &.success {
+    --pico-background-color: var(--pico-color-jade-450);
+    --pico-border-color: var(--pico-color-jade-800);
+
+    &:hover {
+      --pico-background-color: var(--pico-color-jade-500);
+    }
+  }
+}
+
+button[disabled] {
+  cursor: not-allowed;
+}
+
+a.website-url {
+  font-weight: normal;
+  text-decoration: none;
+
+  span {
+    text-decoration: underline dashed;
+  }
+}
+
+.brand-icon {
+  object-fit: contain;
+  filter: saturate(0) brightness(0.5) contrast(1.5);
+
+  &.inverted {
+    filter: saturate(0) brightness(2) contrast(1.5);
+  }
+}

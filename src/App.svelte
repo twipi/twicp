@@ -3,6 +3,7 @@
   import Router from "svelte-spa-router"
 
   import BrowseServices from "#/pages/BrowseServices.svelte"
+  import ControlPanel from "#/pages/ControlPanel.svelte"
   import ServiceDoc from "#/pages/ServiceDoc.svelte"
   import Login from "#/pages/Login.svelte"
 
@@ -26,6 +27,7 @@
     "/": BrowseServices,
     "/login": Login,
     "/service/:name": ServiceDoc,
+    "/service/:name/cp": ControlPanel,
   }}
 />
 
