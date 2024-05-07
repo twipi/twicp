@@ -15,7 +15,7 @@ tasks:
     env:
       VITE_TWIPI_URL: "{{ .TWIPI_URL }}"
     cmds:
-      - vite --clearScreen=false --port={{ .PORT }}
+      - vite --clearScreen=false --port="$PORT"
 
   build:
     deps: [generate]
