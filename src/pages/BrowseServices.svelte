@@ -73,6 +73,10 @@
       list-style: none;
     }
 
+    li {
+      margin-bottom: var(--pico-typography-spacing-vertical);
+    }
+
     a[role="button"] {
       display: flex;
       gap: var(--pico-spacing);
